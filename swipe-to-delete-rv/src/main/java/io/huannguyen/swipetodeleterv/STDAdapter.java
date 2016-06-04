@@ -14,6 +14,7 @@ import java.util.List;
 
 public abstract class STDAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
     protected List<T> mItems;
+    protected ItemRemovalListener mItemRemovalListener;
 
     /**
      * This method is invoked when an item is swiped to remove from a {@link STDRecyclerView}.
@@ -22,13 +23,13 @@ public abstract class STDAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
      *
      * <p>
      * In order to add additional actions on removing or adding the item back to the {@link STDRecyclerView},
-     * you can set a {@link ItemRemovalListener} for the {@link STDRecyclerView}.
+     * you can set a {@link ItemRemovalListener} for the {@link STDAdapter}.
      *
      * @param viewHolder    The view holder associated with the item being removed
      * @param recyclerView  The recycler view contains the item
      *
      * <p>
-     * See {@link STDRecyclerView#setItemRemovalListener(ItemRemovalListener)}
+     * See {@link #setItemRemovalListener(ItemRemovalListener)}
      */
     public void onItemCleared(final ViewHolder viewHolder, final STDRecyclerView recyclerView) {
         final int adapterPosition = viewHolder.getAdapterPosition();
@@ -40,8 +41,8 @@ public abstract class STDAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
                     public void onClick(View v) {
                         mItems.add(adapterPosition, item);
                         notifyItemInserted(adapterPosition);
-                        if (recyclerView.getItemRemovalListener() != null) {
-                            recyclerView.getItemRemovalListener().onItemAddedBack(viewHolder);
+                        if (mItemRemovalListener != null) {
+                            mItemRemovalListener.onItemAddedBack(viewHolder);
                         }
                     }
                 });
@@ -52,8 +53,8 @@ public abstract class STDAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
                 snackbar.dismiss();
             }
         });
-        if (recyclerView.getItemRemovalListener() != null) {
-            recyclerView.getItemRemovalListener().onItemRemoved(viewHolder);
+        if (mItemRemovalListener != null) {
+            mItemRemovalListener.onItemRemoved(viewHolder);
         }
         mItems.remove(adapterPosition);
         notifyItemRemoved(adapterPosition);
@@ -64,7 +65,7 @@ public abstract class STDAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
      * <p>
      * By default, this return the deletion message set in the {@link STDRecyclerView} instance (via attributes or programmatically).
      * <p>
-     * Override this method if you want to programmatically assign different deletion message to different {@link ViewHolder} or item type
+     * Override this method if you want to programmatically assign different deletion message to different item
      *
      * @param viewHolder    The {@link ViewHolder} associated with the item being removed
      * @param recyclerView  The {@link STDRecyclerView} containing the item being removed
@@ -73,5 +74,28 @@ public abstract class STDAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
      */
     protected String getDeleteMessage(ViewHolder viewHolder, STDRecyclerView recyclerView) {
         return recyclerView.getDeleteMessage();
+    }
+
+    /**
+     * Get the supported swipe directions for a particular item in a {@link STDRecyclerView}.
+     *
+     * By default, this function returns -1, which means the swipe directions for this item is identical to the swipe directions that was set via
+     * {@link STDRecyclerView#setupSwipeToDelete(STDAdapter, int)}.
+     * <p>
+     * You can override this function to specify the swipe directions for particular types of items.
+     *
+     * @param viewHolder    The view holder associated with the item whose swipe directions are being set
+     * @return              Swipe directions
+     */
+    protected int getSwipeDirs(ViewHolder viewHolder) {
+        return -1;
+    }
+
+    public ItemRemovalListener getItemRemovalListener() {
+        return mItemRemovalListener;
+    }
+
+    public void setItemRemovalListener(ItemRemovalListener itemRemovalListener) {
+        mItemRemovalListener = itemRemovalListener;
     }
 }

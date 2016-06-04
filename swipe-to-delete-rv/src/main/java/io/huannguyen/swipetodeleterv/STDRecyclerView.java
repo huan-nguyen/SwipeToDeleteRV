@@ -24,8 +24,6 @@ import io.huannguyen.swipetodeleterv.utils.ResourceUtils;
  */
 
 public class STDRecyclerView extends RecyclerView {
-    protected ItemRemovalListener mItemRemovalListener;
-
     private @DrawableRes int mDeleteIconRes;
     private @ColorInt
     int mBorderColor;
@@ -71,20 +69,6 @@ public class STDRecyclerView extends RecyclerView {
     }
 
     /**
-     * Get the supported swipe directions for a particular item based on its {@link ViewHolder}.
-     * By default, this function returns -1, which means the swipe directions for this item is identical to the swipe directions that was set via
-     * {@link #setupSwipeToDelete(STDAdapter, int)}.
-     * <p>
-     * You can override this function to specify the swipe directions for particular types of items.
-     *
-     * @param viewHolder    The view holder associated with the item whose swipe directions are being set
-     * @return              Swipe directions
-     */
-    protected int getSwipeDirs(ViewHolder viewHolder) {
-        return -1;
-    }
-
-    /**
      * This method must be called in order to enable swipe-to-delete feature on the {@link STDRecyclerView}
      *
      * @param adapter           The adapter for interacting with the items in the {@link STDRecyclerView}
@@ -101,7 +85,7 @@ public class STDRecyclerView extends RecyclerView {
 
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                int dirs = ((STDRecyclerView)recyclerView).getSwipeDirs(viewHolder);
+                int dirs = adapter.getSwipeDirs(viewHolder);
                 if(dirs == -1) {
                     return super.getSwipeDirs(recyclerView, viewHolder);
                 }
@@ -178,14 +162,6 @@ public class STDRecyclerView extends RecyclerView {
 
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(STDRecyclerView.this);
-    }
-
-    public ItemRemovalListener getItemRemovalListener() {
-        return mItemRemovalListener;
-    }
-
-    public void setItemRemovalListener(ItemRemovalListener itemRemovalListener) {
-        mItemRemovalListener = itemRemovalListener;
     }
 
     public @DrawableRes int getDeleteIconRes() {
