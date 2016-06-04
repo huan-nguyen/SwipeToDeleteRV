@@ -5,7 +5,7 @@
 
 Below is how `SwipeToDeleteRV` looks.
 
-![Demo Screenshot](./screenshot/dmeo.gif)
+![Demo Screenshot](./screenshot/demo.gif)
 
 # Usage
 `SwipeToDeleteRV` is made with the goal of making things as simple as possible. To implement the `RecyclerView` shown above, the following steps are needed.
