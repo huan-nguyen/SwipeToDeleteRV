@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="stdrv_default_border_color">#cccccc</color>
+    <color name="stdrv_default_delete_view_background">#bbbbbb</color>
+</resources>

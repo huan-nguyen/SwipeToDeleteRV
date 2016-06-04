@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="stdrv_default_icon_size">24dp</dimen>
+    <dimen name="stdrv_default_icon_margin">24dp</dimen>
+    <dimen name="stdrv_default_border_width">1dp</dimen>
+</resources>

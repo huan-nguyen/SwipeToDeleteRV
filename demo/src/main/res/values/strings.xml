@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SwipeToDeleteRV</string>
+    <string name="delete_message">Version Deleted</string>
+</resources>

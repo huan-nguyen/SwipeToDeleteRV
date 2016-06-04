@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="stdrv">
+        <attr name="delete_icon" format="integer"/>
+        <attr name="border_color" format="color"/>
+        <attr name="border_width" format="dimension"/>
+        <attr name="delete_view_background" format="color"/>
+        <attr name="delete_icon_height" format="dimension"/>
+        <attr name="delete_icon_width" format="dimension"/>
+        <attr name="left_delete_icon_margin" format="dimension"/>
+        <attr name="right_delete_icon_margin" format="dimension"/>
+        <attr name="delete_message" format="string"/>
+        <attr name="has_border" format="boolean"/>
+    </declare-styleable>
+</resources>
