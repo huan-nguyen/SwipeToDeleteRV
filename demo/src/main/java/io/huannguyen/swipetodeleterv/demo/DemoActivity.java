@@ -21,10 +21,10 @@ public class DemoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-        inttViews();
+        initViews();
     }
 
-    private void inttViews() {
+    private void initViews() {
         mRecyclerView = (STDRecyclerView) findViewById(R.id.recycler_view);
         LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(layoutManager);
