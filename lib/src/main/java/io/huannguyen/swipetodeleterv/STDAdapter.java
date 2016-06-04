@@ -20,14 +20,14 @@ public abstract class STDAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
      * A {@link Snackbar} with a removal message and an undo button would be displayed.
      * Tapping on the undo button would bring the item back to the {@link STDRecyclerView}.
      *
-     * <p/>
+     * <p>
      * In order to add additional actions on removing or adding the item back to the {@link STDRecyclerView},
      * you can set a {@link ItemRemovalListener} for the {@link STDRecyclerView}.
      *
      * @param viewHolder    The view holder associated with the item being removed
      * @param recyclerView  The recycler view contains the item
      *
-     * <p/>
+     * <p>
      * See {@link STDRecyclerView#setItemRemovalListener(ItemRemovalListener)}
      */
     public void onItemCleared(final ViewHolder viewHolder, final STDRecyclerView recyclerView) {
@@ -61,9 +61,9 @@ public abstract class STDAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
 
     /**
      * Get a message being displayed on a {@link Snackbar} when an item is removed.
-     * <p/>
+     * <p>
      * By default, this return the deletion message set in the {@link STDRecyclerView} instance (via attributes or programmatically).
-     * <p/>
+     * <p>
      * Override this method if you want to programmatically assign different deletion message to different {@link ViewHolder} or item type
      *
      * @param viewHolder    The {@link ViewHolder} associated with the item being removed

@@ -74,11 +74,11 @@ public class STDRecyclerView extends RecyclerView {
      * Get the supported swipe directions for a particular item based on its {@link ViewHolder}.
      * By default, this function returns -1, which means the swipe directions for this item is identical to the swipe directions that was set via
      * {@link #setupSwipeToDelete(STDAdapter, int)}.
-     * <p/>
+     * <p>
      * You can override this function to specify the swipe directions for particular types of items.
      *
      * @param viewHolder    The view holder associated with the item whose swipe directions are being set
-     * @return
+     * @return              Swipe directions
      */
     protected int getSwipeDirs(ViewHolder viewHolder) {
         return -1;
