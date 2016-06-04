@@ -9,7 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/demo" />
-            <option value="$PROJECT_DIR$/lib" />
+            <option value="$PROJECT_DIR$/swipe-to-delete-rv" />
           </set>
         </option>
       </GradleProjectSettings>

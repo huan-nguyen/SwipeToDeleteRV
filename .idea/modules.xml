@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SwipeToDeleteRV.iml" filepath="$PROJECT_DIR$/SwipeToDeleteRV.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo/demo.iml" filepath="$PROJECT_DIR$/demo/demo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/swipe-to-delete-rv/swipe-to-delete-rv.iml" filepath="$PROJECT_DIR$/swipe-to-delete-rv/swipe-to-delete-rv.iml" />
     </modules>
   </component>
 </project>
