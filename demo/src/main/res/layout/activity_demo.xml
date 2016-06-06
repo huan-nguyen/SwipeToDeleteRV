@@ -16,6 +16,7 @@
         stdrv:border_color="@android:color/darker_gray"
         stdrv:delete_view_background="#cccccc"
         stdrv:delete_icon="@drawable/ic_archive"
+        stdrv:delete_icon_color="#000000"
         stdrv:delete_icon_height="24dp"
         stdrv:delete_icon_width="24dp"
         stdrv:left_delete_icon_margin="32dp"

@@ -35,6 +35,7 @@ public class STDRecyclerView extends RecyclerView {
     private float mRightDeleteIconMargin;
     private String mDeleteMessage;
     private boolean mHasBorder;
+    private @ColorInt int mDeleteIconColor;
     private Paint mPaint = new Paint();
     private Bitmap mDeleteIcon;
 
@@ -65,6 +66,7 @@ public class STDRecyclerView extends RecyclerView {
         mRightDeleteIconMargin = typedArray.getDimension(R.styleable.stdrv_right_delete_icon_margin, ResourceUtils.getDimension(context, R.dimen.stdrv_default_icon_margin));
         mDeleteMessage = typedArray.getString(R.styleable.stdrv_delete_message);
         mHasBorder = typedArray.getBoolean(R.styleable.stdrv_has_border, true);
+        mDeleteIconColor = typedArray.getColor(R.styleable.stdrv_delete_icon_color, -1);
         typedArray.recycle();
 
         initResources();
@@ -72,6 +74,9 @@ public class STDRecyclerView extends RecyclerView {
 
     private void initResources() {
         mDeleteIcon = BitmapFactory.decodeResource(getResources(), mDeleteIconRes);
+        if(mDeleteIconColor != -1) {
+            mDeleteIcon = ResourceUtils.changeBitmapColor(mDeleteIcon, mDeleteIconColor);
+        }
     }
 
     /**
