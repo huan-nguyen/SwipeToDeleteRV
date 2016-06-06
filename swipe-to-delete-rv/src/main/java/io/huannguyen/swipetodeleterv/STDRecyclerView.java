@@ -36,6 +36,7 @@ public class STDRecyclerView extends RecyclerView {
     private String mDeleteMessage;
     private boolean mHasBorder;
     private Paint mPaint = new Paint();
+    private Bitmap mDeleteIcon;
 
     public STDRecyclerView(Context context) {
         super(context);
@@ -64,8 +65,13 @@ public class STDRecyclerView extends RecyclerView {
         mRightDeleteIconMargin = typedArray.getDimension(R.styleable.stdrv_right_delete_icon_margin, ResourceUtils.getDimension(context, R.dimen.stdrv_default_icon_margin));
         mDeleteMessage = typedArray.getString(R.styleable.stdrv_delete_message);
         mHasBorder = typedArray.getBoolean(R.styleable.stdrv_has_border, true);
-
         typedArray.recycle();
+
+        initResources();
+    }
+
+    private void initResources() {
+        mDeleteIcon = BitmapFactory.decodeResource(getResources(), mDeleteIconRes);
     }
 
     /**
@@ -99,64 +105,78 @@ public class STDRecyclerView extends RecyclerView {
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
                 if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-
                     View itemView = viewHolder.itemView;
                     float height = (float) (itemView.getBottom() - itemView.getTop());
 
                     if(dX != 0) {
-                        Bitmap deleteIcon = BitmapFactory.decodeResource(getResources(), mDeleteIconRes);
-                        RectF deleteIconPos;
-                        Rect iconDrawnPortion = null;
                         float iconWidth = mDeleteIconWidth;
+                        boolean hasBackground = itemView.getBackground() != null;
 
                         // set paint color as delete view background color
                         mPaint.setColor(mDeleteViewBackground);
 
                         if(dX > 0) {
                             // draw background (area which is visible when the item view is swiped)
-                            RectF background = new RectF(itemView.getLeft(), itemView.getTop(), dX, itemView.getBottom());
-                            c.drawRect(background, mPaint);
+                            c.drawRect(itemView.getLeft(), itemView.getTop(), dX, itemView.getBottom(), mPaint);
 
                             // draw delete icon
+                            // in case the item view has a background (defined with i.e., android:background),
+                            // then we can draw the full icon since it can be hidden by the item view.
+                            // otherwise, we have to draw just a portion of the icon in case the item view hasn't been moved out of
+                            // the area in which the icon should be displayed.
                             if(dX > mLeftDeleteIconMargin) {
-                                if(dX < mLeftDeleteIconMargin + mDeleteIconWidth) {
+                                if(!hasBackground && dX < mLeftDeleteIconMargin + mDeleteIconWidth) {
                                     iconWidth = (int)(dX - mLeftDeleteIconMargin);
                                     // specify the portion of the icon being drawn
-                                    iconDrawnPortion = new Rect(0, 0, (int)iconWidth, (int)mDeleteIconHeight);
+                                    Rect iconDrawnPortion = new Rect(0, 0, (int)iconWidth, (int)mDeleteIconHeight);
+                                    RectF deleteIconPos = new RectF(itemView.getLeft() + (int)mLeftDeleteIconMargin , (int)(itemView.getTop() + 0.5*(height - mDeleteIconHeight)), (int) (itemView.getLeft()+ mLeftDeleteIconMargin + iconWidth), (int)(itemView.getBottom() - 0.5*(height - mDeleteIconHeight)));
+                                    c.drawBitmap(mDeleteIcon, iconDrawnPortion, deleteIconPos, mPaint);
+                                } else {
+                                    c.drawBitmap(mDeleteIcon, itemView.getLeft() + (int)mLeftDeleteIconMargin , (int)(itemView.getTop() + 0.5*(height - mDeleteIconHeight)), mPaint);
                                 }
-                                deleteIconPos = new RectF(itemView.getLeft() + (int)mLeftDeleteIconMargin , (int)(itemView.getTop() + 0.5*(height - mDeleteIconHeight)), (int) (itemView.getLeft()+ mLeftDeleteIconMargin + iconWidth), (int)(itemView.getBottom() - 0.5*(height - mDeleteIconHeight)));
-                                c.drawBitmap(deleteIcon, iconDrawnPortion, deleteIconPos, mPaint);
                             }
                         } else {
                             // draw background (area which is visible when the item view is swiped)
-                            RectF background = new RectF(itemView.getRight() + dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-                            c.drawRect(background, mPaint);
+                            c.drawRect(itemView.getRight() + dX, itemView.getTop(), itemView.getRight(), itemView.getBottom(), mPaint);
 
                             // draw delete icon
                             if(dX < 0 - mRightDeleteIconMargin) {
-                                if(dX > 0 - mLeftDeleteIconMargin - mDeleteIconWidth) {
+                                if(!hasBackground && dX > 0 - mLeftDeleteIconMargin - mDeleteIconWidth) {
                                     iconWidth = (int)(0 - dX - mRightDeleteIconMargin);
                                     // specify the portion of the icon being drawn
-                                    iconDrawnPortion = new Rect((int)(mDeleteIconWidth - iconWidth), 0, (int)mDeleteIconWidth, (int)mDeleteIconHeight);
+                                    Rect iconDrawnPortion = new Rect((int)(mDeleteIconWidth - iconWidth), 0, (int)mDeleteIconWidth, (int)mDeleteIconHeight);
+                                    RectF deleteIconPos = new RectF(itemView.getRight() - mRightDeleteIconMargin - iconWidth, (float)(itemView.getTop() + 0.5*(height - mDeleteIconHeight)), (float) itemView.getRight()- mRightDeleteIconMargin, (float)(itemView.getBottom() - 0.5*(height - mDeleteIconHeight)));
+                                    c.drawBitmap(mDeleteIcon, iconDrawnPortion, deleteIconPos, mPaint);
+                                } else {
+                                    c.drawBitmap(mDeleteIcon, itemView
+                                            .getRight() - mRightDeleteIconMargin - iconWidth, (float) (itemView
+                                            .getTop() + 0.5 * (height - mDeleteIconHeight)), mPaint);
                                 }
-                                deleteIconPos = new RectF(itemView.getRight() - mRightDeleteIconMargin - iconWidth, (float)(itemView.getTop() + 0.5*(height - mDeleteIconHeight)), (float) itemView.getRight()- mRightDeleteIconMargin, (float)(itemView.getBottom() - 0.5*(height - mDeleteIconHeight)));
-                                c.drawBitmap(deleteIcon, iconDrawnPortion, deleteIconPos, mPaint);
                             }
-                        }
-
-                        // draw borders on item view area
-                        if(mHasBorder) {
-                            mPaint.setColor(mBorderColor);
-                            RectF topBorder = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getRight(), itemView.getTop() + mBorderWidth);
-                            c.drawRect(topBorder, mPaint);
-                            RectF bottomBorder = new RectF(itemView.getLeft(), itemView.getBottom() - mBorderWidth, itemView.getRight(), itemView.getBottom());
-                            c.drawRect(bottomBorder, mPaint);
                         }
                     }
                 }
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+
+            @Override
+            public void onChildDrawOver(Canvas c, RecyclerView recyclerView, ViewHolder
+                    viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                // borders must be drawn within onChildDrawOver instead of onChildDraw to make sure it is on top of the item view
+                // in case the item view has a background
+                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE && dX != 0) {
+                    if(mHasBorder) {
+                        View itemView = viewHolder.itemView;
+                        mPaint.setColor(mBorderColor);
+                        c.drawRect(itemView.getLeft(), itemView.getTop(), itemView.getRight(), itemView.getTop() + mBorderWidth, mPaint);
+                        c.drawRect(itemView.getLeft(), itemView.getBottom() - mBorderWidth, itemView.getRight(), itemView.getBottom(), mPaint);
+                    }
+                }
+                super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState,
+                        isCurrentlyActive);
             }
         };
 
