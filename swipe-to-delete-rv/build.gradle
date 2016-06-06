@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 ext {
-    bintrayRepo = 'huannguyen'
+    bintrayRepo = 'maven'
     bintrayName = 'SwipeToDeleteRV'
 
     publishedGroupId = 'io.huannguyen.SwipeToDeleteRV'
