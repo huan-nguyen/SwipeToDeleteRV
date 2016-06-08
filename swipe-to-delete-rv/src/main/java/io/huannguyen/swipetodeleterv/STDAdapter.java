@@ -1,6 +1,7 @@
 package io.huannguyen.swipetodeleterv;
 
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.Snackbar.Callback;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
@@ -14,8 +15,11 @@ import java.util.List;
 
 public abstract class STDAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
     protected List<T> mItems;
-    protected ItemRemovalListener mItemRemovalListener;
+    protected ItemRemovalListener<T> mItemRemovalListener;
 
+    protected STDAdapter(List<T> items) {
+        mItems = items;
+    }
     /**
      * This method is invoked when an item is swiped to remove from a {@link STDRecyclerView}.
      * A {@link Snackbar} with a removal message and an undo button would be displayed.
@@ -42,10 +46,18 @@ public abstract class STDAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
                         mItems.add(adapterPosition, item);
                         notifyItemInserted(adapterPosition);
                         if (mItemRemovalListener != null) {
-                            mItemRemovalListener.onItemAddedBack(viewHolder);
+                            mItemRemovalListener.onItemAddedBack(adapterPosition);
                         }
                     }
                 });
+        snackbar.setCallback(new Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if(event != DISMISS_EVENT_ACTION && mItemRemovalListener != null) {
+                    mItemRemovalListener.onItemPermanentlyRemoved(item);
+                }
+            }
+        });
         snackbar.show();
         snackbar.getView().setOnClickListener(new OnClickListener() {
             @Override
@@ -54,7 +66,7 @@ public abstract class STDAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
             }
         });
         if (mItemRemovalListener != null) {
-            mItemRemovalListener.onItemRemoved(viewHolder);
+            mItemRemovalListener.onItemTemporarilyRemoved(adapterPosition);
         }
         mItems.remove(adapterPosition);
         notifyItemRemoved(adapterPosition);

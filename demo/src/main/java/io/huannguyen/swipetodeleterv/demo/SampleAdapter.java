@@ -16,7 +16,7 @@ import io.huannguyen.swipetodeleterv.STDAdapter;
 public class SampleAdapter extends STDAdapter<String> {
 
     public SampleAdapter(List<String> versionList) {
-        this.mItems = versionList;
+        super(versionList);
     }
 
     @Override
