@@ -268,4 +268,20 @@ public class STDRecyclerView extends RecyclerView {
     public void setHasBorder(boolean hasBorder) {
         mHasBorder = hasBorder;
     }
+
+    public int getDeleteIconColor() {
+        return mDeleteIconColor;
+    }
+
+    public void setDeleteIconColor(int deleteIconColor) {
+        mDeleteIconColor = deleteIconColor;
+    }
+
+    public Bitmap getDeleteIcon() {
+        return mDeleteIcon;
+    }
+
+    public void setDeleteIcon(Bitmap deleteIcon) {
+        mDeleteIcon = deleteIcon;
+    }
 }
