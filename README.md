@@ -1,7 +1,9 @@
 # SwipeToDeleteRV
-`SwipeToDeleteRV` is a library that provides a fast and convenient way to implement the 'wipe to delete and undo' feature in Recycler View, as seen in apps such as Messenger.
+The introduction of `ItemTouchHelper` from the `Android Support Library` makes it easier to implement the `swipe-to-delete` feature in Android apps. Although it is no doubt a great help, it only provides the simplest form of the feature. For some extra functionalities such as background, delete icon, dialog display, etc. you have to handle by yourself by implementing your own `ItemTouchHelper.Callback`.
 
-`SwipeToDeleteRV` wraps around `ItemTouchHelper` from the `Android Support Library`. Therefore, developers do not need to do any extra work on `ItemTouchHelper.Callback` themselve. Instead they can just focus on creating a recycler view, adapter, and view holder as normal, plus some minimal work on specifying some details such as supported swipe directions, deletion message or icon.
+`SwipeToDeleteRV` is a library which is aimed at complementing `ItemTouchHelper` to provide a fast and convenient way to implement the 'swipe to delete and undo' feature in Recycler View, as seen in apps such as Messenger.
+
+`SwipeToDeleteRV` wraps around `ItemTouchHelper`. Therefore, developers do not need to do any extra work on `ItemTouchHelper.Callback` themselve. Instead they can just focus on creating a recycler view, adapter, and view holders as normal, plus some minimal work on specifying some details such as supported swipe directions, deletion message or icon.
 
 Below is how `SwipeToDeleteRV` looks.
 
@@ -28,6 +30,7 @@ xmlns:stdrv="http://schemas.android.com/apk/res-auto"
     stdrv:left_delete_icon_margin="32dp"
     stdrv:delete_message="@string/delete_message"
     stdrv:right_delete_icon_margin="32dp"
+    stdrv:delete_icon_color="#000000"
     stdrv:has_border="true"/>
 ````
 All the above attributes are optional. If you don't specify them, then the default values (defined in the library) are used.
@@ -38,11 +41,11 @@ Notes:
 
 ## Java Code
 ### Adapter
-You have to subclass `STDAdapter`. However, all what you need to do is just specifying the type of the items being displayed within the `STDRecyclerView` (i.e., `String` in this example) and define a constructor which takes a list of items as follows.
+You have to subclass `STDAdapter`. However, all what you need to do is just specifying the type of the items being displayed within the `STDRecyclerView` (i.e., `String` in this example) and make sure you call the `STDAdapter`'s constructor in your `Adapter` constructor as follows:
 ````
 public class SampleAdapter extends STDAdapter<String> {
     public SampleAdapter(List<String> versionList) {
-        this.mItems = versionList;
+        super(versionList);
     }
 }
 ````
@@ -78,14 +81,15 @@ You can override the `getDeleteMessage(ViewHolder viewHolder, STDRecyclerView re
 You can override the `getSwipeDirs(ViewHolder viewHolder)` function in the `STDAdapter` class. By default, this function returns -1, which means the swipe directions for this item is identical to the swipe directions that was set via `STDRecyclerView`'s `setupSwipeToDelete(STDAdapter, int)` method.
 
 ## Specify additional actions when an item is removed from or added back to a Recycler View
-You can create a listener that implements the `ItemRemovalListener` interface and assign this listener to an instance of `STDAdapter`. Within this interface, the following 2 methods must be implemented:
-- `onItemRemoved(ViewHolder viewHolder)`: this method is called when an item is swiped to remove from a `STDRecyclerView` and a `Snackbar` is shown.
-- `onItemAddedBack(ViewHolder viewHolder)`: this method is called when an item is added back to a `STDRecyclerView` after the `undo` button on a `Snackbar` is tapped.
+You can create a listener that implements the `ItemRemovalListener` interface and assign this listener to an instance of `STDAdapter`. Within this interface, the following 3 methods corresponding to 3 stages in the removal process should be implemented:
+- `onItemTemporarilyRemoved(int position)`: this method is called when an item is swiped to remove from a `STDRecyclerView` and a `Snackbar` is shown. It, however, hasn't been cleared from database or other forms of storage.
+- `onItemAddedBack(T item)`: this method is called when an item is added back to a `STDRecyclerView` after the `undo` button on a `Snackbar` is tapped.
+- `onItemPermanentlyRemoved(int position)`: this method is called after the `Snackbar` is dismissed by NOT tapping on the `undo` button (i.e., by either timeout or tapping on other area of the snackbar). This should be the place for you to completely remove the item from your app.
 
 # Download
-`SwipeToDeleteRV` has been uploaded to JCenter. You can download it by adding the following dependency into your project.
+`SwipeToDeleteRV` has been uploaded to both JCenter and Maven Central. You can download it by adding the following dependency into your project.
 ````
-compile 'io.huannguyen.SwipeToDeleteRV:swipe-to-delete-rv:1.0.3'
+compile 'io.huannguyen.SwipeToDeleteRV:swipe-to-delete-rv:1.1.6'
 ````
 # Sample Project
 You can access a sample project using `SwipeToDeleteRV` from the `demo` module in this repo.
