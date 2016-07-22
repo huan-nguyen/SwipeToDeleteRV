@@ -28,7 +28,8 @@ public class STDRecyclerView extends RecyclerView {
     private @ColorInt
     int mBorderColor;
     private float mBorderWidth;
-    private @ColorInt int mDeleteViewBackground;
+    private @ColorInt int mLTRDeleteViewBackground;
+    private @ColorInt int mRTLDeleteViewBackground;
     private float mDeleteIconHeight;
     private float mDeleteIconWidth;
     private float mLeftDeleteIconMargin;
@@ -59,7 +60,8 @@ public class STDRecyclerView extends RecyclerView {
         mDeleteIconRes = typedArray.getResourceId(R.styleable.stdrv_delete_icon, R.drawable.ic_delete);
         mBorderColor = typedArray.getColor(R.styleable.stdrv_border_color, ResourceUtils.getColor(context, R.color.stdrv_default_border_color));
         mBorderWidth = typedArray.getDimension(R.styleable.stdrv_border_width, ResourceUtils.getDimension(context, R.dimen.stdrv_default_border_width));
-        mDeleteViewBackground = typedArray.getColor(R.styleable.stdrv_delete_view_background, ResourceUtils.getColor(context, R.color.stdrv_default_delete_view_background));
+        mLTRDeleteViewBackground = typedArray.getColor(R.styleable.stdrv_ltr_delete_view_background, ResourceUtils.getColor(context, R.color.stdrv_default_delete_view_background));
+        mRTLDeleteViewBackground = typedArray.getColor(R.styleable.stdrv_rtl_delete_view_background, ResourceUtils.getColor(context, R.color.stdrv_default_delete_view_background));
         mDeleteIconHeight = typedArray.getDimension(R.styleable.stdrv_delete_icon_height, ResourceUtils.getDimension(context, R.dimen.stdrv_default_icon_size));
         mDeleteIconWidth = typedArray.getDimension(R.styleable.stdrv_delete_icon_width, ResourceUtils.getDimension(context, R.dimen.stdrv_default_icon_size));
         mLeftDeleteIconMargin = typedArray.getDimension(R.styleable.stdrv_left_delete_icon_margin, ResourceUtils.getDimension(context, R.dimen.stdrv_default_icon_margin));
@@ -120,10 +122,11 @@ public class STDRecyclerView extends RecyclerView {
                         float iconWidth = mDeleteIconWidth;
                         boolean hasBackground = itemView.getBackground() != null;
 
-                        // set paint color as delete view background color
-                        mPaint.setColor(mDeleteViewBackground);
-
+                        // swipe from left to right
                         if(dX > 0) {
+                            // set paint color as the respective delete view background color
+                            mPaint.setColor(mLTRDeleteViewBackground);
+
                             // draw background (area which is visible when the item view is swiped)
                             c.drawRect(itemView.getLeft(), itemView.getTop(), dX, itemView.getBottom(), mPaint);
 
@@ -143,7 +146,10 @@ public class STDRecyclerView extends RecyclerView {
                                     c.drawBitmap(mDeleteIcon, itemView.getLeft() + (int)mLeftDeleteIconMargin , (int)(itemView.getTop() + 0.5*(height - mDeleteIconHeight)), mPaint);
                                 }
                             }
-                        } else {
+                        } else { // swipe from left to right
+                            // set paint color as the respective delete view background color
+                            mPaint.setColor(mRTLDeleteViewBackground);
+
                             // draw background (area which is visible when the item view is swiped)
                             c.drawRect(itemView.getRight() + dX, itemView.getTop(), itemView.getRight(), itemView.getBottom(), mPaint);
 
@@ -213,12 +219,20 @@ public class STDRecyclerView extends RecyclerView {
         mBorderWidth = borderWidth;
     }
 
-    public int getDeleteViewBackground() {
-        return mDeleteViewBackground;
+    public int getLTRDeleteViewBackground() {
+        return mLTRDeleteViewBackground;
     }
 
-    public void setDeleteViewBackground(int deleteViewBackground) {
-        mDeleteViewBackground = deleteViewBackground;
+    public void setLTRDeleteViewBackground(int LTRDeleteViewBackground) {
+        mLTRDeleteViewBackground = LTRDeleteViewBackground;
+    }
+
+    public int getRTLDeleteViewBackground() {
+        return mRTLDeleteViewBackground;
+    }
+
+    public void setRTLDeleteViewBackground(int RTLDeleteViewBackground) {
+        mRTLDeleteViewBackground = RTLDeleteViewBackground;
     }
 
     public float getDeleteIconHeight() {

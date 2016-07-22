@@ -4,7 +4,8 @@
         <attr name="delete_icon" format="integer"/>
         <attr name="border_color" format="color"/>
         <attr name="border_width" format="dimension"/>
-        <attr name="delete_view_background" format="color"/>
+        <attr name="ltr_delete_view_background" format="color"/>
+        <attr name="rtl_delete_view_background" format="color"/>
         <attr name="delete_icon_height" format="dimension"/>
         <attr name="delete_icon_width" format="dimension"/>
         <attr name="delete_icon_color" format="color"/>
